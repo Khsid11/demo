@@ -1,0 +1,22 @@
+
+def AddProductAction(request):
+    if request.method == 'POST':
+        cname = request.POST.get('t1', False)
+        qty = request.POST.get('t2', False)
+        price = request.POST.get('t3', False)
+        desc = request.POST.get('t4', False)
+        image = request.FILES['t5'].read()
+        imagename = request.FILES['t5'].name
+        user = ''
+        with open("session.txt", "r") as file:
+            for line in file:
+                user = line.strip('\n')
+        file.close()
+        myfile = pickle.dumps(image)
+        hashcode = api.add_pyobj(myfile)
+        data = "addproduct#"+user+"#"+cname+"#"+price+"#"+qty+"#"+desc+"#"+hashcode+"\n"
+        saveDataBlockChain(data,"addproduct")
+        context= {'data':"Product details saved and IPFS image storage hashcode = "+hashcode}
+        return render(request, 'AddProduct.html', context)
+        
+   
